@@ -36,6 +36,11 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/recipes/all', async (req, res) => {
+            const result = await recipesCollection.find().toArray();
+            res.send(result)
+        })
+
         app.post('/recipes', async (req, res) => {
             const newRecipes = req.body;
             const result = await recipesCollection.insertOne(newRecipes);
