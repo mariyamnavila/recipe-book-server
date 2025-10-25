@@ -1,3 +1,4 @@
+// import static com.mongodb.client.model.Sorts.descending;
 const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion } = require('mongodb');
@@ -29,11 +30,18 @@ app.get('/', (req, res) => {
 async function run() {
     try {
         const recipesCollection = client.db('recipesDB').collection('recipes')
+
+        app.get('/recipes/main', async (req, res) => {
+            const result = await recipesCollection.find().sort({ 'likeCount': -1 }).limit(6).toArray();
+            res.send(result)
+        })
+
         app.post('/recipes', async (req, res) => {
             const newRecipes = req.body;
             const result = await recipesCollection.insertOne(newRecipes);
             res.send(result)
         })
+
         await client.connect();
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
