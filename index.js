@@ -31,6 +31,8 @@ async function run() {
     try {
         const recipesCollection = client.db('recipesDB').collection('recipes')
 
+        const likedRecipesCollection = client.db('recipesDB').collection('likedRecipes')
+
         app.get('/recipes/main', async (req, res) => {
             const result = await recipesCollection.find().sort({ 'likeCount': -1 }).limit(6).toArray();
             res.send(result)
@@ -73,7 +75,7 @@ async function run() {
             const updatedRecipe = req.body;
             const options = { upsert: true };
             const updateDoc = {
-                $set:  updatedRecipe ,
+                $set: updatedRecipe,
             };
             const result = await recipesCollection.updateOne(filter, updateDoc, options);
             res.send(result);
@@ -84,6 +86,12 @@ async function run() {
             const query = { _id: new ObjectId(id) };
             const result = await recipesCollection.deleteOne(query);
             res.send(result);
+        })
+
+        app.post('/recipes/likedRecipes', async (req, res) => {
+            const likedRecipe = req.body;
+            const result = await likedRecipesCollection.insertOne(likedRecipe);
+            res.send(result)
         })
         // Send a ping to confirm a successful connection
 
