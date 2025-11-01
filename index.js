@@ -88,6 +88,11 @@ async function run() {
             res.send(result);
         })
 
+        app.get('/recipes/likedRecipes', async (req, res) => {
+            const result = await likedRecipesCollection.find().toArray();
+            res.send(result)
+        })
+
         app.post('/recipes/likedRecipes', async (req, res) => {
             const likedRecipe = req.body;
             const result = await likedRecipesCollection.insertOne(likedRecipe);
