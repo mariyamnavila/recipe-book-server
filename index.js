@@ -93,6 +93,13 @@ async function run() {
             const result = await likedRecipesCollection.insertOne(likedRecipe);
             res.send(result)
         })
+
+        app.delete('/recipes/likedRecipes/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await likedRecipesCollection.deleteOne(query);
+            res.send(result);
+        })
         // Send a ping to confirm a successful connection
 
         // await client.connect();
