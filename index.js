@@ -47,7 +47,7 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await recipesCollection.findOne(query);
-            res.send(result)
+            res.send(result);
         })
 
         app.post('/recipes', async (req, res) => {
@@ -88,9 +88,17 @@ async function run() {
             res.send(result);
         })
 
-        app.get('/recipes/likedRecipes', async (req, res) => {
+        app.get('/recipes/likedRecipes/all', async (req, res) => {
             const result = await likedRecipesCollection.find().toArray();
             res.send(result)
+        })
+
+        app.get('/recipes/likedRecipes/:userId', async (req, res) => {
+            const userId = req.params.userId;
+            // Assuming likedRecipes documents store a `userId` field as a string.
+            const query = { userId: userId };
+            const result = await likedRecipesCollection.find(query).toArray();
+            res.send(result);
         })
 
         app.post('/recipes/likedRecipes', async (req, res) => {
@@ -99,8 +107,8 @@ async function run() {
             res.send(result)
         })
 
-        app.delete('/recipes/likedRecipes', async (req, res) => {
-            const { recipeId, userId } = req.body;
+        app.delete('/recipes/likedRecipes/:recipeId/:userId', async (req, res) => {
+            const { recipeId, userId } = req.params;
             const query = { recipeId: recipeId, userId: userId };
             const result = await likedRecipesCollection.deleteOne(query);
             res.send(result);
